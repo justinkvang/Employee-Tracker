@@ -110,9 +110,8 @@ var connection = mysql.createConnection({
         inquirer
           .prompt({
               name: "department",
-              type: "list",
-              message: "Select department to add.",
-              choices: ["Marketing", "Engineering"]
+              type: "input",
+              message: "Enter department name.",
           })
           .then(function(answer) {
               connection.query(
@@ -122,9 +121,38 @@ var connection = mysql.createConnection({
                   },
                   function(err) {
                       if (err) throw err;
-                      console.log("Department has been added successfully!");
+                      console.log("You have successfully added a department!");
                       start();
                   }
               );
           });
     }
+  function addRole() {
+      inquirer
+        .prompt([
+            {
+                name: "title",
+                type: "input",
+                message: "Enter employee role."
+            },
+            {
+                name: "salary",
+                type: "input",
+                message: "Enter employee salary."
+            }
+        ])
+        .then(function(answer){
+            connection.query(
+                "INSERT INTO role SET ?",
+                {
+                    title: answer.title,
+                    salary: answer.salary
+                },
+                function(err) {
+                    if (err) throw err;
+                    console.log("You have successfully added a role!");
+                    start();
+                }
+            );
+        });
+  }
