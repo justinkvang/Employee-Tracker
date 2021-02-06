@@ -29,33 +29,16 @@ var connection = mysql.createConnection({
                      "Update Employee", "Update Department", "Update Role"]
         })
         .then(function(answer) {
-            if (answer.addViewUpdate === "Add Employee", "Add Department", "Add Role") {
-                addMenu();
+            if (answer.addViewUpdate === "Add Employee") {
+                addEmployee();
+            } else if(answer.addViewUpdate === "Add Department") {
+                addDepartment();
+            } else if(answer.addViewUpdate === "Add Role") {
+                addRole();
             } else if(answer.addViewUpdate === "View Employee", "View Department", "View Role") {
                 viewMenu();
             } else if(answer.addViewUpdate === "Update Employee", "Update Department", "Update Role") {
                 updateMenu();
-            } else {
-                connection.end();
-            }
-        });
-  }
-
-  function addMenu() {
-      inquirer
-        .prompt({
-            name: "addMenu",
-            type: "list",
-            message: "What item would you like to add?",
-            choices: ["Employee", "Department", "Role"]
-        })
-        .then(function(answer) {
-            if (answer.addMenu === "Employee") {
-                addEmployee();
-            } else if (answer.addMenu === "Department") {
-                addDepartment();
-            } else if (answer.addMenu === "Role") {
-                addRole();
             } else {
                 connection.end();
             }
@@ -127,6 +110,7 @@ var connection = mysql.createConnection({
               );
           });
     }
+
   function addRole() {
       inquirer
         .prompt([
@@ -155,4 +139,4 @@ var connection = mysql.createConnection({
                 }
             );
         });
-  }
+    }
