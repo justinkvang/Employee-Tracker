@@ -24,18 +24,34 @@ var connection = mysql.createConnection({
             name: "addViewUpdate",
             type: "list",
             message: "Would you like to add, view, or update an employee|department|role?",
-            choices: ["Add", "View", "Update"]
+            choices: ["Add Employee", "Add Department", "Add Role",
+                     "View Employee", "View Department", "View Role",
+                     "Update Employee", "Update Department", "Update Role"]
         })
         .then(function(answer) {
-            if (answer.addViewUpdate === "Add") {
+            if (answer.addViewUpdate === ("Add Employee", "Add Department", "Add Role")) {
                 addMenu();
-            } else if(answer.addViewUpdate === "View") {
+            } else if(answer.addViewUpdate === ("View Employee", "View Department", "View Role")) {
                 viewMenu();
-            } else if(answer.addViewUpdate === "Update") {
+            } else if(answer.addViewUpdate === ("Update Employee", "Update Department", "Update Role")) {
                 updateMenu();
             } else {
                 connection.end();
             }
         });
   }
-  
+
+  function addMenu() {
+      inquirer
+        .prompt({
+            name: "addMenu",
+            type: "list",
+            message: "What item would you like to add?",
+            choices: ["Employee", "Department", "Role"]
+        })
+        .then(function(answer) {
+            if (answer.addMenu === "Employee") {
+
+            }
+        })
+  }
