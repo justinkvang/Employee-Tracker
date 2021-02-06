@@ -51,7 +51,64 @@ var connection = mysql.createConnection({
         })
         .then(function(answer) {
             if (answer.addMenu === "Employee") {
-
+                addEmployee();
+            } else if (answer.addMenu === "Department") {
+                addDepartment();
+            } else if (answer.addMenu === "Role") {
+                addRole();
+            } else {
+                connection.end();
             }
-        })
+        });
   }
+
+  function addEmployee() {
+      inquirer
+        .prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "Enter employee first name."
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "Enter employee last name."
+            },
+            {
+                name: "role",
+                type: "list",
+                message: "Select employee role.",
+                choices: ["Intern", "Engineer", "Marketing Planner", "Manager"]
+            },
+            {
+                name: "manager",
+                type: "list",
+                message: "Select employee manager name.",
+                choices: ["Justin Vang", "Alayna X Vang"]
+            }
+        ])
+        .then(function(answer) {
+            connection.query(
+                "INSERT INTO employee SET ?",
+                {
+                    first_name: answer.firstName,
+                    last_name: answer.lastName,
+                    role_id: answer.role,
+                    manager_id: answer.manager
+                },
+                function(err) {
+                    if (err) throw err;
+                    console.log("You have successfully created a new employee!");
+                    start();
+                }
+            );
+        });
+    }
+    
+  function addDepartment() {
+        inquirer
+          .prompt({
+              
+          })
+    }
