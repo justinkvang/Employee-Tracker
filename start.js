@@ -29,11 +29,11 @@ var connection = mysql.createConnection({
                      "Update Employee", "Update Department", "Update Role"]
         })
         .then(function(answer) {
-            if (answer.addViewUpdate === ("Add Employee", "Add Department", "Add Role")) {
+            if (answer.addViewUpdate === "Add Employee", "Add Department", "Add Role") {
                 addMenu();
-            } else if(answer.addViewUpdate === ("View Employee", "View Department", "View Role")) {
+            } else if(answer.addViewUpdate === "View Employee", "View Department", "View Role") {
                 viewMenu();
-            } else if(answer.addViewUpdate === ("Update Employee", "Update Department", "Update Role")) {
+            } else if(answer.addViewUpdate === "Update Employee", "Update Department", "Update Role") {
                 updateMenu();
             } else {
                 connection.end();
@@ -105,10 +105,26 @@ var connection = mysql.createConnection({
             );
         });
     }
-    
+
   function addDepartment() {
         inquirer
           .prompt({
-              
+              name: "department",
+              type: "list",
+              message: "Select department to add.",
+              choices: ["Marketing", "Engineering"]
           })
+          .then(function(answer) {
+              connection.query(
+                  "INSERT INTO department SET ?",
+                  {
+                      name: answer.department
+                  },
+                  function(err) {
+                      if (err) throw err;
+                      console.log("Department has been added successfully!");
+                      start();
+                  }
+              );
+          });
     }
