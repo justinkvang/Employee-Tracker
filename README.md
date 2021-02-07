@@ -19,9 +19,23 @@ Developers are often tasked with creating interfaces that make it easy for non-d
   You must also have [MySQL Workbench](https://dev.mysql.com/downloads/workbench/) to run the `schema.sql` and `seed.sql`. These files contain a made up employee database that the application can send to and grab from.
 
   ## Usage
-  ![Gif demo note-taker](./demo.gif)
-  
   When you run `start.js` in the intergrated terminal, it will prompt you with a list of choices. Select what you would like to do and proceed with your choice. 
+
+  View employees/departments/roles
+
+  <img src="./Assets/view.gif" width="500" height="400"/>
+
+  Add Department
+
+  <img src="./Assets/addDepartment.gif" width="500" height="400"/>
+  
+  Add Role
+
+  <img src="./Assets/addRole.gif" width="500" height="400"/>
+  
+  Add Employee
+
+  <img src="./Assets/addEmployee.gif" width="500" height="400"/>
 
   ## License
   [MIT License](https://choosealicense.com/licenses/mit/)
