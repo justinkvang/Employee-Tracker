@@ -23,10 +23,11 @@ var connection = mysql.createConnection({
         .prompt({
             name: "addViewUpdate",
             type: "list",
-            message: "Would you like to add, view, or update an employee|department|role?",
+            message: "What would you like to do?",
             choices: ["Add Employee", "Add Department", "Add Role",
                      "View Employee", "View Department", "View Role",
-                     "Update Employee", "Update Department", "Update Role"]
+                     "Update Employee", "Update Department", "Update Role",
+                     "Exit"]
         })
         .then(function(answer) {
             if (answer.addViewUpdate === "Add Employee") {
@@ -35,11 +36,19 @@ var connection = mysql.createConnection({
                 addDepartment();
             } else if(answer.addViewUpdate === "Add Role") {
                 addRole();
-            } else if(answer.addViewUpdate === "View Employee", "View Department", "View Role") {
-                viewMenu();
-            } else if(answer.addViewUpdate === "Update Employee", "Update Department", "Update Role") {
-                updateMenu();
-            } else {
+            } else if(answer.addViewUpdate === "View Employee") {
+                viewEmployee();
+            } else if(answer.addViewUpdate === "View Department") {
+                viewDepartment();
+            } else if(answer.addViewUpdate === "View Role") {
+                viewRole();
+            } else if(answer.addViewUpdate === "Update Employee") {
+                updateEmployee();
+            } else if(answer.addViewUpdate === "Update Department") {
+                updateDepartment();
+            } else if(answer.addViewUpdate === "Update Role") {
+                updateRole();
+            } else if (answer.addViewUpdate === "Exit") {
                 connection.end();
             }
         });
@@ -140,3 +149,20 @@ var connection = mysql.createConnection({
             );
         });
     }
+  
+  function viewEmployee() {
+      connection.query("SELECT * FROM employee", function(err, res) {
+          if (err) throw err;
+          console.table(res);
+          start();
+      });
+  }
+
+  function viewDepartment() {
+      connection.query("SELECT * FROM department", function(err, res) {
+          if (err) throw err;
+          console.table(res);
+          start();
+      });
+  }
+  
