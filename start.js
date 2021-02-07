@@ -165,4 +165,11 @@ var connection = mysql.createConnection({
           start();
       });
   }
-  
+
+  function viewRole() {
+      console.query("SELECT * FROM role", function(err, res) {
+          if (err) throw err;
+          console.table(res);
+          start();
+      });
+  }
