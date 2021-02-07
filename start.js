@@ -21,29 +21,55 @@ var connection = mysql.createConnection({
             name: "addViewUpdate",
             type: "list",
             message: "What would you like to do?",
-            choices: ["Add Employee", "Add Department", "Add Role",
-                     "View Employee", "View Department", "View Role",
+            choices: ["View Employee", "View Department", "View Role",
+                     "Add Employee", "Add Department", "Add Role",
                     "Update Employee", "Exit"]
         })
         .then(function(answer) {
-            if (answer.addViewUpdate === "Add Employee") {
-                addEmployee();
-            } else if(answer.addViewUpdate === "Add Department") {
-                addDepartment();
-            } else if(answer.addViewUpdate === "Add Role") {
-                addRole();
-            } else if(answer.addViewUpdate === "View Employee") {
+            if (answer.addViewUpdate === "View Employee") {
                 viewEmployee();
             } else if(answer.addViewUpdate === "View Department") {
                 viewDepartment();
             } else if(answer.addViewUpdate === "View Role") {
                 viewRole();
+            } else if (answer.addViewUpdate === "Add Employee") {
+                addEmployee();
+            } else if(answer.addViewUpdate === "Add Department") {
+                addDepartment();
+            } else if(answer.addViewUpdate === "Add Role") {
+                addRole();
             } else if(answer.addViewUpdate === "Update Employee") {
                 updateEmployee();
-            }  else if (answer.addViewUpdate === "Exit") {
+            } else if (answer.addViewUpdate === "Exit") {
                 connection.end();
             }
         })
+  }
+  function viewEmployee() {
+    connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", 
+      function(err, res) {
+          if (err) throw err;
+          console.table(res);
+          start();
+      });
+  }
+
+  function viewDepartment() {
+    connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;",
+      function(err, res) {
+          if (err) throw err;
+          console.table(res);
+          start();
+      });
+  }
+
+  function viewRole() {
+    connection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
+      function(err, res) {
+          if (err) throw err;
+          console.table(res);
+          start();
+      });
   }
 
 var roleArr = [];
@@ -169,33 +195,6 @@ function selectManager() {
     });
     }
   
-  function viewEmployee() {
-    connection.query("SELECT employee.first_name, employee.last_name, role.title, role.salary, department.name, CONCAT(e.first_name, ' ' ,e.last_name) AS Manager FROM employee INNER JOIN role on role.id = employee.role_id INNER JOIN department on department.id = role.department_id left join employee e on employee.manager_id = e.id;", 
-      function(err, res) {
-          if (err) throw err;
-          console.table(res);
-          start();
-      });
-  }
-
-  function viewDepartment() {
-    connection.query("SELECT employee.first_name, employee.last_name, department.name AS Department FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id ORDER BY employee.id;",
-      function(err, res) {
-          if (err) throw err;
-          console.table(res);
-          start();
-      });
-  }
-
-  function viewRole() {
-    connection.query("SELECT employee.first_name, employee.last_name, role.title AS Title FROM employee JOIN role ON employee.role_id = role.id;", 
-      function(err, res) {
-          if (err) throw err;
-          console.table(res);
-          start();
-      });
-  }
-
   function updateEmployee() {
         connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", 
         function(err, res) {
@@ -242,4 +241,4 @@ function selectManager() {
         });
       });
     
-  }
+    }
