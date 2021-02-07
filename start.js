@@ -167,7 +167,7 @@ var connection = mysql.createConnection({
   }
 
   function viewRole() {
-      console.query("SELECT * FROM role", function(err, res) {
+      connection.query("SELECT * FROM role", function(err, res) {
           if (err) throw err;
           console.table(res);
           start();
