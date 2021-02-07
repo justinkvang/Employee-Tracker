@@ -11,8 +11,8 @@
     "url": "git+https://github.com/justinkvang/Employee-Tracker.git"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Justin Vang",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/justinkvang/Employee-Tracker/issues"
   },
