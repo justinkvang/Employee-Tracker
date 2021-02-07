@@ -208,25 +208,5 @@ var connection = mysql.createConnection({
                         })
                     } 
             });
-            function newRole() {
-                inquirer
-                    .prompt({
-                        name: "newRole",
-                        type: "list",
-                        message: "Select new role.",
-                        choices: ["Intern", "Engineer", "Marketing Planner", "Manager"]
-                    })
-                    .then(function(answer) {
-                        connection.query(
-                            "UPDATE employee SET ? WHERE ?",
-                            {
-                                role_id: answer.newRole
-                            },
-                            function(err, res) {
-                                if (err) throw err;
-                            }
-                        );
-                    });
-            }
       })
   }
