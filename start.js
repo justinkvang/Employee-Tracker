@@ -116,7 +116,7 @@ function selectManager() {
             },
             {
                 name: "manager",
-                type: "list",
+                type: "rawlist",
                 message: "Select employee manager name.",
                 choices: selectManager()
             }
@@ -223,7 +223,7 @@ function selectManager() {
               },
           ]).then(function(answer) {
             var roleId = selectRole().indexOf(answer.role) + 1
-            connection.query("UPDATE employee SET WHERE ?", 
+            connection.query("UPDATE employee SET ? WHERE ?", 
             {
               last_name: answer.lastName
                
@@ -234,8 +234,8 @@ function selectManager() {
             }, 
             function(err){
                 if (err) throw err
-                console.table(answer);
-                start();
+                console.table(answer)
+                start()
             })
       
         });
