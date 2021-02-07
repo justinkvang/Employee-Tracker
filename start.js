@@ -26,7 +26,7 @@ var connection = mysql.createConnection({
             message: "What would you like to do?",
             choices: ["Add Employee", "Add Department", "Add Role",
                      "View Employee", "View Department", "View Role",
-                    "Update Department", "Update Role", "Exit"]
+                    "Update Employee", "Exit"]
         })
         .then(function(answer) {
             if (answer.addViewUpdate === "Add Employee") {
@@ -41,15 +41,36 @@ var connection = mysql.createConnection({
                 viewDepartment();
             } else if(answer.addViewUpdate === "View Role") {
                 viewRole();
-            } else if(answer.addViewUpdate === "Update Department") {
-                updateDepartment();
-            } else if(answer.addViewUpdate === "Update Role") {
-                updateRole();
-            } else if (answer.addViewUpdate === "Exit") {
+            } else if(answer.addViewUpdate === "Update Employee") {
+                updateEmployee();
+            }  else if (answer.addViewUpdate === "Exit") {
                 connection.end();
             }
         });
   }
+
+var roleArr = [];
+function selectRole() {
+    connection.query("SELECT * FROM role", function(err,res) {
+        if (err) throw err
+        for (var i = 0; i < res.length; i++) {
+            roleArr.push(res[i].title);
+        }
+    })
+    return roleArr;
+}
+
+var managersArr = [];
+function selectManager() {
+  connection.query("SELECT first_name, last_name FROM employee WHERE manager_id IS NULL", function(err, res) {
+    if (err) throw err
+    for (var i = 0; i < res.length; i++) {
+      managersArr.push(res[i].first_name);
+    }
+
+  })
+  return managersArr;
+}
 
   function addEmployee() {
       inquirer
@@ -68,23 +89,25 @@ var connection = mysql.createConnection({
                 name: "role",
                 type: "list",
                 message: "Select employee role.",
-                choices: ["Intern", "Engineer", "Marketing Planner", "Manager"]
+                choices: selectRole()
             },
             {
                 name: "manager",
                 type: "list",
                 message: "Select employee manager name.",
-                choices: ["Justin Vang", "Alayna X Vang"]
+                choices: selectManager()
             }
         ])
         .then(function(answer) {
+            var roleId = selectRole().indexOf(answer.role) + 1
+            var managerId = selectManager().indexOf(answer.choice) + 1
             connection.query(
                 "INSERT INTO employee SET ?",
                 {
                     first_name: answer.firstName,
                     last_name: answer.lastName,
-                    role_id: answer.role,
-                    manager_id: answer.manager
+                    role_id: roleId,
+                    manager_id: managerId
                 },
                 function(err) {
                     if (err) throw err;
@@ -100,17 +123,17 @@ var connection = mysql.createConnection({
           .prompt({
               name: "department",
               type: "input",
-              message: "Enter department name.",
+              message: "What department would you like to add?",
           })
           .then(function(answer) {
               connection.query(
-                  "INSERT INTO department SET ?",
+                  "INSERT INTO department SET ? ",
                   {
                       name: answer.department
                   },
                   function(err) {
                       if (err) throw err;
-                      console.log("You have successfully added a department!");
+                      console.table(res);
                       start();
                   }
               );
@@ -118,6 +141,7 @@ var connection = mysql.createConnection({
     }
 
   function addRole() {
+      connection.query("SELECT role.title AS title, role.salary AS salary FROM role", function(err, res) {
       inquirer
         .prompt([
             {
@@ -143,8 +167,9 @@ var connection = mysql.createConnection({
                     console.log("You have successfully added a role!");
                     start();
                 }
-            );
+            )
         });
+    });
     }
   
   function viewEmployee() {
@@ -171,32 +196,50 @@ var connection = mysql.createConnection({
       });
   }
 
-  function updateRole() {
-          inquirer
+  function updateEmployee() {
+        connection.query("SELECT employee.last_name, role.title FROM employee JOIN role ON employee.role_id = role.id;", 
+        function(err, res) {
+         if (err) throw err
+         console.log(res)
+        
+         inquirer
             .prompt([
-                {
-                    name: "employees",
-                    type: "input",
-                    message: "What employee would you like to update?"
+              {
+                name: "lastName",
+                type: "rawlist",
+                choices: function() {
+                  var lastName = [];
+                  for (var i = 0; i < res.length; i++) {
+                    lastName.push(res[i].last_name);
+                  }
+                  return lastName;
                 },
-                {
-                    name: "updateRole",
-                    type: "input",
-                    message: "Select what you want to update."
-                }
-            ])
-            .then(function(answer) {
-                connection.query(
-                    "UPDATE employee SET ? WHERE ?",
-                    {
-                        role_id: answer.updateRole,
-                        first_name: answer.employees
-                    },
-                    function(err) {
-                        if (err) throw err;
-                        console.log("You have successfully updated the role!");
-                        start();
-                    }
-                );
+                message: "What is the Employee's last name? ",
+              },
+              {
+                name: "role",
+                type: "rawlist",
+                message: "What is the Employees new title? ",
+                choices: selectRole()
+              },
+          ]).then(function(val) {
+            var roleId = selectRole().indexOf(val.role) + 1
+            connection.query("UPDATE employee SET WHERE ?", 
+            {
+              last_name: val.lastName
+               
+            }, 
+            {
+              role_id: roleId
+               
+            }, 
+            function(err){
+                if (err) throw err
+                console.table(val);
+                start();
+            })
+      
+        });
       });
-}
+    
+  }
