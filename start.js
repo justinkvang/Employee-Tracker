@@ -172,41 +172,31 @@ var connection = mysql.createConnection({
   }
 
   function updateRole() {
-      connection.query("SELECT * FROM employee", function(err, res) {
-          if (err) throw err;
-
           inquirer
             .prompt([
                 {
                     name: "employees",
-                    type: "rawlist",
-                    choices: function() {
-                        var employeesArray = [];
-                        for (var i = 0; i < res.length; i++) {
-                            employeesArray.push(res[i].first_name + " " + res[i].last_name);
-                        }
-                        return employeesArray;
-                    },
+                    type: "input",
                     message: "What employee would you like to update?"
                 },
                 {
-                    name: "updateWhat",
-                    type: "list",
-                    message: "Select what you want to update.",
-                    choices: ["Role", "Manager"]
+                    name: "updateRole",
+                    type: "input",
+                    message: "Select what you want to update."
                 }
             ])
             .then(function(answer) {
-                if (answer.updateWhat === "Role") {
-                    newRole();
-                    } else if (answer.updateWhat === "Manager") {
-                    inquirer
-                        .prompt({
-                            name: "newLastName",
-                            type: "input",
-                            message: "Enter new last name."
-                        })
-                    } 
-            });
-      })
-  }
+                connection.query(
+                    "UPDATE employee SET ? WHERE ?",
+                    {
+                        role_id: answer.updateRole,
+                        first_name: answer.employees
+                    },
+                    function(err) {
+                        if (err) throw err;
+                        console.log("You have successfully updated the role!");
+                        start();
+                    }
+                );
+      });
+}
