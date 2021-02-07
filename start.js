@@ -26,8 +26,7 @@ var connection = mysql.createConnection({
             message: "What would you like to do?",
             choices: ["Add Employee", "Add Department", "Add Role",
                      "View Employee", "View Department", "View Role",
-                     "Update Employee", "Update Department", "Update Role",
-                     "Exit"]
+                    "Update Department", "Update Role", "Exit"]
         })
         .then(function(answer) {
             if (answer.addViewUpdate === "Add Employee") {
@@ -42,8 +41,6 @@ var connection = mysql.createConnection({
                 viewDepartment();
             } else if(answer.addViewUpdate === "View Role") {
                 viewRole();
-            } else if(answer.addViewUpdate === "Update Employee") {
-                updateEmployee();
             } else if(answer.addViewUpdate === "Update Department") {
                 updateDepartment();
             } else if(answer.addViewUpdate === "Update Role") {
@@ -172,4 +169,64 @@ var connection = mysql.createConnection({
           console.table(res);
           start();
       });
+  }
+
+  function updateRole() {
+      connection.query("SELECT * FROM employee", function(err, res) {
+          if (err) throw err;
+
+          inquirer
+            .prompt([
+                {
+                    name: "employees",
+                    type: "rawlist",
+                    choices: function() {
+                        var employeesArray = [];
+                        for (var i = 0; i < res.length; i++) {
+                            employeesArray.push(res[i].first_name + " " + res[i].last_name);
+                        }
+                        return employeesArray;
+                    },
+                    message: "What employee would you like to update?"
+                },
+                {
+                    name: "updateWhat",
+                    type: "list",
+                    message: "Select what you want to update.",
+                    choices: ["Role", "Manager"]
+                }
+            ])
+            .then(function(answer) {
+                if (answer.updateWhat === "Role") {
+                    newRole();
+                    } else if (answer.updateWhat === "Manager") {
+                    inquirer
+                        .prompt({
+                            name: "newLastName",
+                            type: "input",
+                            message: "Enter new last name."
+                        })
+                    } 
+            });
+            function newRole() {
+                inquirer
+                    .prompt({
+                        name: "newRole",
+                        type: "list",
+                        message: "Select new role.",
+                        choices: ["Intern", "Engineer", "Marketing Planner", "Manager"]
+                    })
+                    .then(function(answer) {
+                        connection.query(
+                            "UPDATE employee SET ? WHERE ?",
+                            {
+                                role_id: answer.newRole
+                            },
+                            function(err, res) {
+                                if (err) throw err;
+                            }
+                        );
+                    });
+            }
+      })
   }
