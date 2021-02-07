@@ -23,19 +23,19 @@ Developers are often tasked with creating interfaces that make it easy for non-d
 
   View employees/departments/roles
 
-  <img src="./Assets/view.gif" width="500" height="400"/>
+  <img src="./Assets/view.gif" width="650" height="550"/>
 
   Add Department
 
-  <img src="./Assets/addDepartment.gif" width="500" height="400"/>
+  <img src="./Assets/addDepartment.gif" width="650" height="550"/>
   
   Add Role
 
-  <img src="./Assets/addRole.gif" width="500" height="400"/>
+  <img src="./Assets/addRole.gif" width="650" height="550"/>
   
   Add Employee
 
-  <img src="./Assets/addEmployee.gif" width="500" height="400"/>
+  <img src="./Assets/addEmployee.gif" width="650" height="550"/>
 
   ## License
   [MIT License](https://choosealicense.com/licenses/mit/)
